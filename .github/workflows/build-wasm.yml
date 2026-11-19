@@ -73,7 +73,7 @@ jobs:
             -release \
             -nomake examples \
             -nomake tests \
-            ---DCMAKE_BUILD_TYPE=Release -G Ninja
+            -- -DCMAKE_BUILD_TYPE=Release -G Ninja
           cmake --build . --parallel $(nproc)
           cmake --install .
 
