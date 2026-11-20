@@ -134,6 +134,7 @@ Possible fixes:
   - xcb: `QXcbWindow::handleButtonPressEvent()` only calls `requestActivate()` if `w->type() != Qt::Popup`.
   - cocoa: `QCocoaWindow::windowDidBecomeKey()` skips the focus window change for popups ("Window is popup. Skipping focus window change."), and `[QNSView becomeFirstResponder]` has the same check.
   - windows: popups are shown with `SW_SHOWNOACTIVATE`.
+  - wayland: the plugin doesn't activate a window when it's clicked. The focus window follows the compositor's keyboard focus (`wl_keyboard.enter`). Every `Qt::Popup` is created as an `xdg_popup` with an explicit grab (`QWaylandXdgSurface::setGrabPopup()`), and under the xdg-shell protocol the keyboard focus stays on the topmost grabbing popup, even when the user clicks its parent popup.
 
   This fix is limited to the wasm plugin, so it can't affect other platforms. One thing to check is typing into a text field inside a popup (e.g. a `QLineEdit`), since on wasm the browser element that receives text input belongs to a specific window.
 - Or, in `processFocusWindowEvent()`, don't move a popup that's already in `popup_list` above the popups that were opened after it. This would also cover any other platform where a parent popup can become the focus window while a child popup is open, but it changes code that every platform uses.
